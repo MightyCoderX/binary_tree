@@ -48,6 +48,8 @@ SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 1
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: WithoutElse
 
 SortIncludes: true
 IncludeBlocks: Preserve
