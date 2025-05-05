@@ -1,9 +1,11 @@
-#include "binary_tree.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "binary_tree.h"
+#include "queue/queue.h"
 
 BTreeNode* btree_new_node(int value) {
     BTreeNode* new = malloc(sizeof(BTreeNode));
@@ -53,34 +55,71 @@ BTreeNode* btree_find_node(BTreeNode* p_node, int value) {
     return left == NULL ? right : left;
 }
 
-void btree_pre_order_traversal(BTreeNode* p_node) {
+void btree_pre_order_traversal(BTreeNode* p_node, void (*visit)(BTreeNode* p_node)) {
     if(p_node == NULL) {
         return;
     }
 
-    printf("%d\n", p_node->value);
-    btree_pre_order_traversal(p_node->left);
-    btree_pre_order_traversal(p_node->right);
+    visit(p_node);
+    btree_pre_order_traversal(p_node->left, visit);
+    btree_pre_order_traversal(p_node->right, visit);
 }
 
-void btree_in_order_traversal(BTreeNode* p_node) {
+void btree_in_order_traversal(BTreeNode* p_node, void (*visit)(BTreeNode* p_node)) {
     if(p_node == NULL) {
         return;
     }
 
-    btree_in_order_traversal(p_node->left);
-    printf("%d\n", p_node->value);
-    btree_in_order_traversal(p_node->right);
+    btree_in_order_traversal(p_node->left, visit);
+    visit(p_node);
+    btree_in_order_traversal(p_node->right, visit);
 }
 
-void btree_post_order_traversal(BTreeNode* p_node) {
+void btree_post_order_traversal(BTreeNode* p_node, void (*visit)(BTreeNode* p_node)) {
     if(p_node == NULL) {
         return;
     }
 
-    btree_post_order_traversal(p_node->left);
-    btree_post_order_traversal(p_node->right);
-    printf("%d\n", p_node->value);
+    btree_post_order_traversal(p_node->left, visit);
+    btree_post_order_traversal(p_node->right, visit);
+    visit(p_node);
+}
+
+void btree_breadth_first_traversal_internal(
+    BTreeNode* p_node, LinkedQueue* p_queue, void (*visit)(BTreeNode*)) {
+    if(p_node == NULL) {
+        return;
+    }
+
+    if(p_node->left != NULL) {
+        queue_enqueue(p_queue, p_node->left);
+    }
+    if(p_node->right != NULL) {
+        queue_enqueue(p_queue, p_node->right);
+    }
+
+    if(p_node->left != NULL) {
+        btree_breadth_first_traversal_internal(p_node->left, p_queue, visit);
+    }
+
+    if(p_node->right != NULL) {
+        btree_breadth_first_traversal_internal(p_node->right, p_queue, visit);
+    }
+
+    while(!queue_is_empty(p_queue)) {
+        visit(queue_dequeue(p_queue));
+    }
+}
+
+void btree_breadth_first_traversal(BTreeNode* p_node, void (*visit)(BTreeNode*)) {
+    if(p_node == NULL) {
+        return;
+    }
+
+    LinkedQueue queue = queue_init();
+    queue_enqueue(&queue, p_node);
+
+    btree_breadth_first_traversal_internal(p_node, &queue, visit);
 }
 
 size_t btree_depth_internal(BTreeNode* p_current, BTreeNode* p_target, size_t depth) {
@@ -148,4 +187,6 @@ BTreeNode* btree_add_child(BinaryTree* p_tree, int parent_value, BTreeSide side,
     return node;
 }
 
-void btree_print(BinaryTree* p_tree) { }
+void btree_print(BinaryTree* p_tree) {
+    ;
+}

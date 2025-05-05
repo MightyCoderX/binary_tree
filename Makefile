@@ -2,7 +2,7 @@ CC = gcc
 # CFLAGS = -std=c99 -Wall -Wextra -Werror -pedantic
 CFLAGS = -std=c99 -Wall -Wextra -pedantic
 
-SRCS := *.c
+SRCS := $(shell find -name '*.c')
 EXE_NAME := main
 
 main: $(SRCS)

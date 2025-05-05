@@ -19,10 +19,10 @@ typedef struct {
 
 BTreeNode* btree_new_node(int value);
 bool btree_is_leaf(BTreeNode* p_node);
-void btree_pre_order_traversal(BTreeNode* p_node);
-void btree_in_order_traversal(BTreeNode* p_node);
-void btree_post_order_traversal(BTreeNode* p_node);
-void btree_breadth_first_traversal(BTreeNode* p_node);
+void btree_pre_order_traversal(BTreeNode* p_node, void (*visit)(BTreeNode* p_node));
+void btree_in_order_traversal(BTreeNode* p_node, void (*visit)(BTreeNode* p_node));
+void btree_post_order_traversal(BTreeNode* p_node, void (*visit)(BTreeNode* p_node));
+void btree_breadth_first_traversal(BTreeNode* p_node, void (*visit)(BTreeNode* p_node));
 BTreeNode* btree_find_node(BTreeNode* p_node, int value);
 
 BinaryTree btree_init(int root_value);
